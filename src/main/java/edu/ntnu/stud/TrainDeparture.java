@@ -18,4 +18,24 @@ public class TrainDeparture {
         this.delay = "00:00"; // No delay as a standard
 
 }
+// Getters
+public String getDepartureTime() {
+    return departureTime;
+}
+public String getLine() {
+    return line;
+}
+public String getTrainNumber() {
+    return trainNumber;
+}
+public String getDestination() {
+    return destination;
+}
+public int getTrack() {
+    return track;
+}
+public String getDelay() {
+    return delay;
+}
+
 }
