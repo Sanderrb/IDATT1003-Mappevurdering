@@ -49,12 +49,15 @@ public class TrainDispatchApp {
           case 7:
               System.out.print("Oppgi klokkeslett (tt:mm) for å fjerne avganger før og oppdatere klokken: ");
               String time = scanner.nextLine();
-              if(system.setCurrentTime(time)) {
+
+              String timeFormatRegex = "^\\d{2}:\\d{2}$";
+
+              if(time.matches(timeFormatRegex) && system.setCurrentTime(time)) {
                   system.removeDeparturesBefore(time);
                   System.out.println("Togavganger før " + time + " er fjernet.");
                   System.out.println("Klokken er satt til: " + time);
               } else {
-                  System.out.println("Klokken kan ikke settes til et tidligere tidspunkt enn " + system.getCurrentTime());
+                  System.out.println("Ugyldig klokkeslett format eller klokken kan ikke settes til et tidligere tidspunkt enn " + system.getCurrentTime());
               }
               break;
           case 8:
