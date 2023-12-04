@@ -40,7 +40,11 @@ public String getDelay() {
 
 // Setters
 public void setDepartureTime(String departureTime) {
-    this.departureTime = departureTime;
+    if (departureTime.matches("\\d{2}:\\d{2}")) {
+        this.departureTime = departureTime;
+    } else {
+        
+    }
 }
 
 public void setLine(String line) {
@@ -56,7 +60,10 @@ public void setDestination(String destination) {
 }
 
 public void setTrack(int track) {
-    this.track = track;
+    if (track > 0) { 
+        this.track = track;
+    } else {
+    }
 }
 
 public void setDelay(String delay) {
@@ -66,7 +73,7 @@ public void setDelay(String delay) {
 //This method creates the right format used later in the traintable
 public String getFormattedDepartureInfo() {
     String trackInfo = (track == -1) ? "-" : String.format("%2d", track);
-    String delayInfo = delay.equals("00:00") ? " " : delay;
+    String delayInfo = delay.equals("00:00") ? " " : String.format("%-10s", delay);
 
     return String.format("| %-10s | %-4s | %-5s | %-12s | %-10s | %5s |",
             departureTime, line, trainNumber, destination, delayInfo, trackInfo);
