@@ -9,11 +9,15 @@ import java.util.stream.Collectors;
 
 public class TrainDispatchSystem {
     private List<TrainDeparture> departures;
-    private LocalTime currentTime;
+    private LocalTime currentTime = LocalTime.now();
 
 public TrainDispatchSystem() {
     departures = new ArrayList<>();
     this.currentTime = LocalTime.MIDNIGHT;
+}
+
+public List<TrainDeparture> getDepartures() {
+    return this.departures; 
 }
 
 // Returens current time if format wanted
@@ -23,12 +27,10 @@ public String getCurrentTime() {
 
 //Searches after traindepartures based on their train number
 public TrainDeparture searchByTrainNumber(String trainNumber) {
-    for (TrainDeparture departure : departures) {
-        if (departure.getTrainNumber().equals(trainNumber)) {
-            return departure;
-        }
-    }
-    return null;
+    return departures.stream()
+            .filter(d -> d.getTrainNumber().equals(trainNumber))
+            .findFirst()
+            .orElse(null); // Return null if no departure is found
 }
 
 //Searches after traindepartures based on their destination
@@ -40,11 +42,18 @@ public List<TrainDeparture> searchByDestination(String destination) {
 
 //Method to add a new traindeparture
 public boolean addTrainDeparture(TrainDeparture departure) {
-    if (departures.stream().anyMatch(d -> d.getTrainNumber().equals(departure.getTrainNumber()))) {
-        return false; //It returns false if the trainnumber already exists. Therefore cant be placed in the system
+    // Validate the departure time format
+    if (!departure.getDepartureTime().matches("\\d{2}:\\d{2}")) {
+        return false; // Do not add if the time format is invalid
     }
+    // Check if a departure with the same train number already exists
+    for (TrainDeparture d : departures) {
+        if (d.getTrainNumber().equals(departure.getTrainNumber())) {
+            return false; // Do not add duplicate train numbers
+        }
+    }
+    // Add the departure to the list
     departures.add(departure);
-    departures.sort(Comparator.comparing(TrainDeparture::getDepartureTime));
     return true;
 }
 
@@ -73,7 +82,7 @@ public boolean addDelayToDeparture(String trainNumber, String delay) {
 //This method updates the current time
 public boolean setCurrentTime(String newTimeStr) {
     LocalTime newTime = LocalTime.parse(newTimeStr, DateTimeFormatter.ofPattern("HH:mm"));
-    if (newTime.isAfter(currentTime) || newTime.equals(currentTime)) {
+    if (!newTime.isBefore(currentTime)) {
         currentTime = newTime;
         return true;
     }
