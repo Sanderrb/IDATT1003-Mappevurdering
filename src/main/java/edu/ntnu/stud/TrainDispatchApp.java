@@ -47,19 +47,9 @@ public class TrainDispatchApp {
               searchByDestination(system, scanner);
               break;
           case 7:
-              System.out.print("Oppgi klokkeslett (tt:mm) for å fjerne avganger før og oppdatere klokken: ");
-              String time = scanner.nextLine();
-
-              String timeFormatRegex = "^\\d{2}:\\d{2}$";
-
-              if(time.matches(timeFormatRegex) && system.setCurrentTime(time)) {
-                  system.removeDeparturesBefore(time);
-                  System.out.println("Togavganger før " + time + " er fjernet.");
-                  System.out.println("Klokken er satt til: " + time);
-              } else {
-                  System.out.println("Ugyldig klokkeslett format eller klokken kan ikke settes til et tidligere tidspunkt enn " + system.getCurrentTime());
-              }
+              removeDeparturesAndUpdateTime(system, scanner);
               break;
+              
           case 8:
               System.out.println("Nåværende tid: " + system.getCurrentTime());
               break;
@@ -146,6 +136,22 @@ private static void searchByDestination(TrainDispatchSystem system, Scanner scan
       departures.forEach(TrainDeparture::displayInformation);
   } else {
       System.out.println("Ingen togavganger funnet til gitt destinasjon.");
+  }
+}
+
+// Method to handle removing departures before a specified time and updating the system's current time
+private static void removeDeparturesAndUpdateTime(TrainDispatchSystem system, Scanner scanner) {
+  System.out.print("Oppgi klokkeslett (tt:mm) for å fjerne avganger før og oppdatere klokken: ");
+  String time = scanner.nextLine();
+
+  String timeFormatRegex = "^\\d{2}:\\d{2}$";
+
+  if (time.matches(timeFormatRegex) && system.setCurrentTime(time)) {
+      system.removeDeparturesBefore(time);
+      System.out.println("Togavganger før " + time + " er fjernet.");
+      System.out.println("Klokken er satt til: " + time);
+  } else {
+      System.out.println("Ugyldig klokkeslett format eller klokken kan ikke settes til et tidligere tidspunkt enn " + system.getCurrentTime());
   }
 }
 }
